@@ -54,7 +54,7 @@ illuminating to inspect one specific implementation,
 and then move on to the common abstract skeleton with this one in mind.
 
 
-performance comparison to other available des code which i could
+performance compared to other available des code which I could
 compile on a SPARCStation 1 (cc -O4, gcc -O2):
 
 this code (byte-order independent):
@@ -65,23 +65,23 @@ this code (byte-order independent):
   - 48us per encryption (options:  2k tables, FIPS standard bit ordering)
   - 275us to set a new key (uses 1k of key tables)
 
-	this has the quickest encryption/decryption routines i've seen.
-	since i was interested in fast des filters rather than crypt(3)
-	and password cracking, i haven't really bothered yet to speed up
-	the key setting routine. also, i have no interest in re-implementing
-	all the other junk in the mit kerberos des library, so i've just
+	this has the quickest encryption/decryption routines I've seen.
+	since I was interested in fast des filters rather than crypt(3)
+	and password cracking, I haven't really bothered yet to speed up
+	the key setting routine. also, I have no interest in re-implementing
+	all the other junk in the mit kerberos des library, so I've just
 	provided my routines with little stub interfaces so they can be
 	used as drop-in replacements with mit's code or any of the mit-
 	compatible packages below. (note that the first two timings above
 	are highly variable because of cache effects).
 
-kerberos des replacement from australia (version 1.95):
+kerberos des replacement from Australia (version 1.95):
 
   - 53us per encryption (uses 2k of tables)
   - 96us to set a new key (uses 2.25k of key tables)
 
 	so despite the author's inclusion of some of the performance
-	improvements i had suggested to him, this package's
+	improvements I had suggested to him, this package's
 	encryption/decryption is still slower on the sparc and 68000.
 	more specifically, 19-40% slower on the 68020 and 11-35% slower
 	on the sparc,  depending on the compiler;
@@ -106,43 +106,43 @@ kerberos des replacement from australia (version 1.95):
    - 68us per encryption (uses 2k of tables)
    - 96us to set a new key (uses 2.25k of key tables)
 
-	this is a very nice package which implements the most important
-	of the optimizations which i did in my encryption routines.
+	this is a very nice package that implements the most important
+	of the optimizations which I did in my encryption routines.
 	it's a bit weak on common low-level optimizations which is why
 	it's 39%-106% slower.  because he was interested in fast crypt(3) and
 	password-cracking applications,  he also used the same ideas to
 	speed up the key-setting routines with impressive results.
-	(at some point i may do the same in my package).  he also implements
+	(at some point I may do the same in my package).  he also implements
 	the rest of the mit des library.
 
 	(code from eay@psych.psy.uq.oz.au via comp.sources.misc)
 
-fast crypt(3) package from denmark:
+fast crypt(3) package from Denmark:
 
 	the des routine here is buried inside a loop to do the
-	crypt function and i didn't feel like ripping it out and measuring
+	crypt function and I didn't feel like ripping it out and measuring
 	performance. his code takes 26 sparc instructions to compute one
 	des iteration; above, Quick (64k) takes 21 and Small (2k) takes 37.
 	he claims to use 280k of tables but the iteration calculation seems
-	to use only 128k.  his tables and code are machine independent.
+	to use only 128k.  his tables and code are machine-independent.
 
 	(code from glad@daimi.aau.dk via alt.sources or comp.sources.misc)
 
-swedish reimplementation of Kerberos des library
+Swedish reimplementation of Kerberos des library
 
   - 108us per encryption (uses 34k worth of tables)
   - 134us to set a new key (uses 32k of key tables to get this speed!)
 
 	the tables used seem to be machine-independent;
-	he seems to have included a lot of special case code
+	he seems to have included a lot of special-case code
 	so that, e.g., ``long`` loads can be used instead of 4 ``char`` loads
 	when the machine's architecture allows it.
 
 	(code obtained from chalmers.se:pub/des)
 
-crack 3.3c package from england:
+crack 3.3c package from England:
 
-	as in crypt above, the des routine is buried in a loop. it's
+	as in the crypt above, the des routine is buried in a loop. it's
 	also very modified for crypt.  his iteration code uses 16k
 	of tables and appears to be slow.
 
@@ -154,7 +154,7 @@ crack 3.3c package from england:
   - 478us to set a new key (uses <1k of key tables)
 
 	so despite the comments in this code, it was possible to get
-	faster code AND smaller tables, as well as making the tables
+	faster code AND smaller tables, as well as make the tables
 	machine-independent.
 	(code obtained from prep.ai.mit.edu)
 
@@ -169,10 +169,10 @@ UC Berkeley code (depends on machine-endedness):
 motivation and history
 ======================
 
-a while ago i wanted some des routines and the routines documented on sun's
-man pages either didn't exist or dumped core.  i had heard of kerberos,
-and knew that it used des,  so i figured i'd use its routines.  but once
-i got it and looked at the code,  it really set off a lot of pet peeves -
+a while ago I wanted some des routines and the routines documented on sun's
+man pages either didn't exist or dumped core.  I had heard of kerberos,
+and knew that it used des,  so I figured I'd use its routines.  but once
+I got it and looked at the code,  it really set off a lot of pet peeves -
 it was too convoluted, the code had been written without taking
 advantage of the regular structure of operations such as IP, E, and FP
 (i.e. the author didn't sit down and think before coding),
@@ -180,23 +180,23 @@ it was excessively slow,  the author had attempted to clarify the code
 by adding MORE statements to make the data movement more ``consistent``
 instead of simplifying his implementation and cutting down on all data
 movement (in particular, his use of L1, R1, L2, R2), and it was full of
-idiotic ``tweaks`` for particular machines which failed to deliver significant
-speedups but which did obfuscate everything.  so i took the test data
+idiotic ``tweaks`` for particular machines which failed to deliver significant 
+speedups but which did obfuscate everything.  so I took the test data
 from his verification program and rewrote everything else.
 
-a while later i ran across the great crypt(3) package mentioned above.
+a while later I ran across the great crypt(3) package mentioned above.
 the fact that this guy was computing 2 sboxes per table lookup rather
 than one (and using a MUCH larger table in the process) emboldened me to
-do the same - it was a trivial change from which i had been scared away
+do the same - it was a trivial change from which I had been scared away
 by the larger table size.  in his case he didn't realize you don't need to keep
 the working data in TWO forms, one for easy use of half the sboxes in
-indexing, the other for easy use of the other half; instead you can keep
+indexing, the other for easy use of the other half; instead, you can keep
 it in the form for the first half and use a simple rotate to get the other
-half.  this means i have (almost) half the data manipulation and half
-the table size.  in fairness though he might be encoding something particular
-to crypt(3) in his tables - i didn't check.
+half.  this means I have (almost) half the data manipulation and half
+the table size.  in fairness, though he might be encoding something particular
+to crypt(3) in his tables - I didn't check.
 
-i'm glad that i implemented it the way i did, because this C version is
+I'm glad that I implemented it the way I did because this C version is
 portable (the ifdef's are performance enhancements) and it is faster
 than versions hand-written in assembly for the sparc!
 
@@ -204,25 +204,25 @@ than versions hand-written in assembly for the sparc!
 porting notes
 =============
 
-one thing i did not want to do was write an enormous mess
-which depended on endedness and other machine quirks,
+one thing I did not want to do was write an enormous mess
+that depended on endedness and other machine quirks,
 and which necessarily produced different code and different lookup tables
 for different machines.  see the kerberos code for an example
-of what i didn't want to do; all their endedness-specific ``optimizations``
-obfuscate the code and in the end were slower than a simpler machine
-independent approach.  however, there are always some portability
-considerations of some kind, and i have included some options
+of what I didn't want to do; all their endedness-specific ``optimizations``
+obfuscate the code and in the end, were slower than a simpler machine-independent 
+approach.  however, there are always some portability
+considerations of some kind, and I have included some options
 for varying numbers of register variables.
 perhaps some will still regard the result as a mess!
 
-1) i assume everything is byte addressable, although i don't actually
+1) I assume everything is byte-addressable, although I don't actually
    depend on the byte order, and that bytes are 8 bits.
-   i assume word pointers can be freely cast to and from char pointers.
+   I assume word pointers can be freely cast to and from char pointers.
    note that 99% of C programs make these assumptions.
-   i always use unsigned char's if the high bit could be set.
+   I always use unsigned char's if the high bit could be set.
 2) the typedef ``word`` means a 32 bit unsigned integral type.
    if ``unsigned long`` is not 32 bits, change the typedef in desCore.h.
-   i assume sizeof(word) == 4 EVERYWHERE.
+   I assume sizeof(word) == 4 EVERYWHERE.
 
 the (worst-case) cost of my NOT doing endedness-specific optimizations
 in the data loading and storing code surrounding the key iterations
@@ -246,13 +246,13 @@ OPTIONAL performance optimizations
    note that gcc is smart enough to translate the ROL/R macros into
    machine rotates!
 
-these optimizations are all rather persnickety, yet with them you should
+these optimizations are all rather pernickety, yet with them, you should
 be able to get performance equal to assembly-coding, except that:
 
 1) with the lack of a bit rotate operator in C, rotates have to be synthesized
    from shifts.  so access to ``asm`` will speed things up if your machine
-   has rotates, as explained above in (3) (not necessary if you use gcc).
-2) if your machine has less than 12 32-bit registers i doubt your compiler will
+   has rotated, as explained above in (3) (not necessary if you use gcc).
+2) if your machine has less than 12 32-bit registers I doubt your compiler will
    generate good code.
 
    ``i386`` tries to configure the code for a 386 by only declaring 3 registers
@@ -264,7 +264,7 @@ be able to get performance equal to assembly-coding, except that:
    des_keymap, i.e., now the sbox # is the high part of the index and
    the 6 bits of data is the low part; it helps to exchange these.
 
-   since i have no way to conveniently test it i have not provided my
+   since I have no way to conveniently test it I have not provided my
    shoehorned 386 version.  note that with this release of desCore, gcc is able
    to put everything in registers(!), and generate about 370 instructions apiece
    for the DesQuickCore... routines!
@@ -277,9 +277,9 @@ with 4 being actively used at once during the inner iterations.
 if you don't have 4 register variables get a new machine.
 up to 8 more registers are used to hold constants in some configurations.
 
-i assume that the use of a constant is more expensive than using a register:
+I assume that the use of a constant is more expensive than using a register:
 
-a) additionally, i have tried to put the larger constants in registers.
+a) additionally, I have tried to put the larger constants in registers.
    registering priority was by the following:
 
 	- anything more than 12 bits (bad for RISC and CISC)
@@ -289,14 +289,14 @@ a) additionally, i have tried to put the larger constants in registers.
 
 b) the compiler may be too stupid to realize table and table+256 should
    be assigned to different constant registers and instead repetitively
-   do the arithmetic, so i assign these to explicit ``m`` register variables
+   do the arithmetic, so I assign these to explicit ``m`` register variables
    when possible and helpful.
 
-i assume that indexing is cheaper or equivalent to auto increment/decrement,
+I assume that indexing is cheaper or equivalent to auto-increment/decrement,
 where the index is 7 bits unsigned or smaller.
 this assumption is reversed for 68k and vax.
 
-i assume that addresses can be cheaply formed from two registers,
+I assume that addresses can be cheaply formed from two registers,
 or from a register and a small constant.
 for the 68000, the ``two registers and small offset`` form is used sparingly.
 all index scaling is done explicitly - no hidden shifts by log2(sizeof).
@@ -318,7 +318,7 @@ bits are manipulated in this arrangement most of the time (S7 S5 S3 S1)::
 
 	003130292827xxxx242322212019xxxx161514131211xxxx080706050403xxxx
 
-(the x bits are still there, i'm just emphasizing where the S boxes are).
+(the x bits are still there, I'm just emphasizing where the S boxes are).
 bits are rotated left 4 when computing S6 S4 S2 S0::
 
 	282726252423xxxx201918171615xxxx121110090807xxxx040302010031xxxx
@@ -355,13 +355,13 @@ DesMethod(m, k)
 	en/decryption with the key k. if you use DesMethod,
 	you supply a standard 56bit key; however, if you fill in
 	m yourself, you will get a 768bit key - but then it won't
-	be standard.  it's 768bits not 1024 because the least significant
+	be standard.  it's 768bits, not 1024 because the least significant
 	two bits of each byte are not used.  note that these two bits
 	will be set to magic constants which speed up the encryption/decryption
 	on some machines.  and yes, each byte controls
 	a specific sbox during a specific iteration.
 
-	you really shouldn't use the 768bit format directly;  i should
+	you really shouldn't use the 768bit format directly;  I should
 	provide a routine that converts 128 6-bit bytes (specified in
 	S-box mapping order or something) into the right format for you.
 	this would entail some byte concatenation and rotation.
@@ -382,7 +382,7 @@ Des{Small|Quick}{Fips|Core}{Encrypt|Decrypt}(d, m, s)
 
 	Small|Quick determines whether you use the normal routine
 	or the crazy quick one which gobbles up 64k more of memory.
-	Small is 50% slower then Quick, but Quick needs 32 times as much
+	Small is 50% slower than Quick, but Quick needs 32 times as much
 	memory.  Quick is included for programs that do nothing but DES,
 	e.g., encryption filters, etc.
 
@@ -390,9 +390,9 @@ Des{Small|Quick}{Fips|Core}{Encrypt|Decrypt}(d, m, s)
 Getting it to compile on your machine
 =====================================
 
-there are no machine-dependencies in the code (see porting),
+there are no machine dependencies in the code (see porting),
 except perhaps the ``now()`` macro in desTest.c.
-ALL generated tables are machine independent.
+ALL generated tables are machine-independent.
 you should edit the Makefile with the appropriate optimization flags
 for your compiler (MAX optimization).
 
@@ -400,7 +400,7 @@ for your compiler (MAX optimization).
 Speeding up kerberos (and/or its des library)
 =============================================
 
-note that i have included a kerberos-compatible interface in desUtil.c
+note that I have included a kerberos-compatible interface in desUtil.c
 through the functions des_key_sched() and des_ecb_encrypt().
 to use these with kerberos or kerberos-compatible code put desCore.a
 ahead of the kerberos-compatible library on your linker's command line.
