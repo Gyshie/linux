@@ -1,6 +1,6 @@
 This directory attempts to document the ABI between the Linux kernel and
 userspace, and the relative stability of these interfaces.  Due to the
-everchanging nature of Linux, and the differing maturity levels, these
+ever-changing nature of Linux, and the differing maturity levels, these
 interfaces should be used by userspace programs in different ways.
 
 We have four different levels of ABI stability, as shown by the four
@@ -21,7 +21,7 @@ The different levels of stability are:
 	This directory documents interfaces that are felt to be stable,
 	as the main development of this interface has been completed.
 	The interface can be changed to add new features, but the
-	current interface will not break by doing this, unless grave
+	current interface will not break by doing this unless grave
 	errors or security problems are found in them.  Userspace
 	programs can start to rely on these interfaces, but they must be
 	aware of changes that can occur before these interfaces move to
@@ -46,7 +46,7 @@ Every file in these directories will contain the following information:
 What:		Short description of the interface
 Date:		Date created
 KernelVersion:	Kernel version this feature first showed up in.
-Contact:	Primary contact for this interface (may be a mailing list)
+Contact:	Primary contact for this interface (maybe a mailing list)
 Description:	Long description of the interface and how to use it.
 Users:		All users of this interface who wish to be notified when
 		it changes.  This is very important for interfaces in
@@ -74,7 +74,7 @@ notification is given.
 Interfaces may be removed from obsolete and the kernel as long as the
 documented amount of time has gone by.
 
-Interfaces in the testing state can move to the stable state when the
+Interfaces in the testing state can move to a stable state when the
 developers feel they are finished.  They cannot be removed from the
 kernel tree without going through the obsolete state first.
 
